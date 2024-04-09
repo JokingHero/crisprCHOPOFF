@@ -10,7 +10,7 @@ build_index(
   out_dir,
   algorithm = "prefixHashDB",
   distance = 3,
-  motif = "Cas9",
+  preset = "Cas9",
   hash_length = 16,
   ambig_max = 0,
   strands = c("+", "-"),
@@ -33,7 +33,7 @@ index in directory, named \code{paste0(genome, ".fai")}}
 
 \item{distance}{""}
 
-\item{motif}{The preset for parameters, default "Cas9". Alternatives:
+\item{preset}{The preset for parameters, default "Cas9". Alternatives:
 Cas12 and NULL (user custom settings)}
 
 \item{hash_length}{""}
@@ -56,7 +56,8 @@ Cas12 and NULL (user custom settings)}
 invisible(NULL)
 }
 \description{
-Build CHOPOFF index
+Build the genome index for CHOPOFF, using either a preset (Cas9 or Cas12),
+or user defined parameters.
 }
 \examples{
 name <- "CAS9"
