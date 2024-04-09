@@ -46,6 +46,9 @@ build_index(name, genome, out_dir_index, validate = FALSE)
 
 # Now search some guides
 guides <- system.file("extdata/sample_genome", "guides.txt", package = "crisprCHOPOFF")
+# Quick preview in guides:
+guide_candidates <- read.table(guides, col.names = "guides")
+unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
 guide_hits <- search_index(guides, out_dir_index, validate = FALSE)
 guide_hits_table <- read.table(guide_hits, sep = ",", header = TRUE)
 # use data.table::fread for reading in large list
