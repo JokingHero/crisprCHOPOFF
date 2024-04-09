@@ -23,7 +23,7 @@ remotes::install_github("JokingHero/crisprCHOPOFF)
 ```sh
 # In Shell
 # Get julia 1.8.5 (required version)
-mkdir ~/bin/julia
+mkdir -p ~/bin/julia
 cd ~/bin/julia
 wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.5-linux-x86_64.tar.gz
 tar -xvzf julia-1.8.5-linux-x86_64.tar.gz
@@ -36,15 +36,16 @@ export JULIA_NUM_THREADS=11
 
 # Clone julia CHOPOFF library (select folder where you have your github clones)
 # In Shell
-# update path to your path
-cd ~/forks
+cd ~/bin # update path to your path if needed
 git clone git@github.com:JokingHero/CHOPOFF.jl.git
 cd CHOPOFF.jl
 ./build_standalone.sh
 # In .bashrc (update to your custom path!)
-export PATH="$PATH:~/forks/CHOPOFF.jl/build/bin/"
+export PATH="$PATH:~/bin/CHOPOFF.jl/build/bin/"
 # In Shell
-. .bashrc # resource shell, if not working restart computer now
+. ~/.bashrc # resource shell, if not working restart computer now
+echo CHOPOFF=/home/roler/Desktop/forks/CHOPOFF.jl/build/bin/CHOPOFF >> ~/.Renviron
+# <- To allow RSTUDIO to see the CHOPOFF path, then restart RSTUDIO
 ```  
 
 CHOPOFF should now be ready to use in the R wrapper

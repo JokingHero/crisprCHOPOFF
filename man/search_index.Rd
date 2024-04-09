@@ -27,6 +27,9 @@ search_index(
 
 \item{out_dir}{""}
 }
+\value{
+path to csv output file of guides
+}
 \description{
 Search guides in CHOPOFF index
 }

@@ -51,6 +51,9 @@ index in directory, named \code{paste0(genome, ".fai")}}
 
 \item{chopoff_path}{PATH to CHOPOFF, default "CHOPOFF"}
 }
+\value{
+invisible(NULL)
+}
 \description{
 Build CHOPOFF index
 }

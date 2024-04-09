@@ -14,7 +14,9 @@
 #' @param fwd_pam ""
 #' @param extend3prime ""
 #' @param validate TRUE, if false, do not check that CHOPOFF path is valid
-#' @param chopoff_path PATH to CHOPOFF, default "CHOPOFF"
+#' @param chopoff_path PATH to CHOPOFF, default Sys.getenv("CHOPOFF")
+#' @return invisible(NULL)
+#' @export
 #' @examples
 #' name <- "CAS9"
 #' genome <- system.file("extdata/sample_genome", "semirandom.fa", package = "crisprCHOPOFF")
@@ -33,7 +35,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
                         fwd_pam = "XXXXXXXXXXXXXXXXXXXXNGG",
                         extend3prime = FALSE,
                         validate = TRUE,
-                        chopoff_path = "CHOPOFF") {
+                        chopoff_path = Sys.getenv("CHOPOFF")) {
   stopifnot(is.character(strands))
   stopifnot(is.logical(extend3prime))
   if (validate) check_exist_and_get_version(chopoff_path)
@@ -49,6 +51,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
   algorithm <- paste(names(algorithm), algorithm)
   args <- c("build", paste(names(args), shQuote(args)), logicals, algorithm)
   system(paste(normalizePath(chopoff_path), paste(args, collapse = " ")), wait = TRUE)
+  return(invisible(NULL))
 }
 
 #' Search guides in CHOPOFF index
@@ -59,6 +62,8 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 #' @param validate TRUE, if false, do not check that CHOPOFF path is valid
 #' @param algorithm default: prefixHashDB, alternatives: TODO: list all here!
 #' @param chopoff_path PATH to CHOPOFF, default "CHOPOFF"
+#' @return path to csv output file of guides
+#' @export
 #' @examples
 #' name <- "CAS9"
 #' genome <- system.file("extdata/sample_genome", "semirandom.fa", package = "crisprCHOPOFF")
@@ -83,7 +88,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 search_index <- function(guides, index_dir, out_file = file.path(index_dir, paste0(algorithm, "_", distance, ".csv")),
                          algorithm = "prefixHashDB",
                          distance = 3, validate = TRUE,
-                         chopoff_path = "CHOPOFF") {
+                         chopoff_path = Sys.getenv("CHOPOFF")) {
   stopifnot(dir.exists(index_dir))
   if (length(guides) != 1 && is.character(guides) && file.exists(guides)) {
     stop("'guides' must be character path to single existing file!")
