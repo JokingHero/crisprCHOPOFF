@@ -36,6 +36,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
                         extend3prime = FALSE,
                         validate = TRUE,
                         chopoff_path = Sys.getenv("CHOPOFF")) {
+  stopifnot(length(motif) %in% c(0, 1) && (is.character(motif) || is.null(motif)))
   stopifnot(is.character(strands) && all(strands %in% c("+", "-")))
   stopifnot(is.logical(extend3prime))
   if (validate) check_exist_and_get_version(chopoff_path)
