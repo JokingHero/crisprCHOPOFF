@@ -18,7 +18,7 @@ build_index(
   fwd_pam = "XXXXXXXXXXXXXXXXXXXXNGG",
   extend3prime = FALSE,
   validate = TRUE,
-  chopoff_path = Sys.getenv("CHOPOFF")
+  chopoff_path = install_CHOPOFF()
 )
 }
 \arguments{
@@ -50,7 +50,7 @@ Cas12 and NULL (user custom settings)}
 
 \item{validate}{TRUE, if false, do not check that CHOPOFF path is valid}
 
-\item{chopoff_path}{PATH to CHOPOFF, default Sys.getenv("CHOPOFF")}
+\item{chopoff_path}{PATH to CHOPOFF, default install_CHOPOFF()}
 }
 \value{
 invisible(NULL)

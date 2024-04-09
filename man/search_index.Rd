@@ -11,7 +11,7 @@ search_index(
   algorithm = "prefixHashDB",
   distance = 3,
   validate = TRUE,
-  chopoff_path = Sys.getenv("CHOPOFF")
+  chopoff_path = install_CHOPOFF()
 )
 }
 \arguments{
@@ -23,7 +23,7 @@ search_index(
 
 \item{validate}{TRUE, if false, do not check that CHOPOFF path is valid}
 
-\item{chopoff_path}{PATH to CHOPOFF, default "CHOPOFF"}
+\item{chopoff_path}{PATH to CHOPOFF, default install_chopoff()}
 
 \item{out_dir}{""}
 }

@@ -20,6 +20,22 @@ remotes::install_github("JokingHero/crisprCHOPOFF)
 ```  
 
 #### System requirements
+OS support: Unix (linux & mac)
+For windows, run through WSL (windows subsystem for linux)
+
+Normally, first time running build_index(), will install the backend for you, 
+through the function install_CHOPOFF()
+```r
+# The script ran, can be found from:
+system.file("bash_script", "install_julia_and_CHOPOFF.sh", package = "crisprCHOPOFF")
+
+install_CHOPOFF()
+```  
+
+For direct install into ~/bin, copy and run code below, it will install:
+- Julia 1.8.5
+- CHOPOFF.jl
+The script content is this:
 ```sh
 # In Shell
 # Get julia 1.8.5 (required version)
@@ -37,7 +53,7 @@ git clone git@github.com:JokingHero/CHOPOFF.jl.git
 cd CHOPOFF.jl
 ./build_standalone.sh
 # In .bashrc (update to your custom path!)
-export PATH="$PATH:~/bin/CHOPOFF.jl/build/bin/"
+echo 'export PATH="$PATH:~/bin/CHOPOFF.jl/build/bin/"' >> ~/.bashrc
 # In Shell
 . ~/.bashrc # resource shell
 echo CHOPOFF=/home/roler/Desktop/forks/CHOPOFF.jl/build/bin/CHOPOFF >> ~/.Renviron
@@ -45,6 +61,7 @@ echo CHOPOFF=/home/roler/Desktop/forks/CHOPOFF.jl/build/bin/CHOPOFF >> ~/.Renvir
 ```  
 
 CHOPOFF should now be ready to use in the R wrapper
+
 #### More information
 
 After installation run:

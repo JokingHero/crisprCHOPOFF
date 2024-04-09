@@ -1,12 +1,15 @@
 
 #' Build CHOPOFF index
+#'
+#' Build the genome index for CHOPOFF, using either a preset (Cas9 or Cas12),
+#' or user defined parameters.
 #' @param name How will you shortly name this database?
 #' @param genome Path to the genome, either .fa or .2bit. Must have a fasta
 #' index in directory, named \code{paste0(genome, ".fai")}
 #' @param out_dir ""
 #' @param algorithm default: prefixHashDB, alternatives: TODO: list all here!
 #' @param distance ""
-#' @param motif The preset for parameters, default "Cas9". Alternatives:
+#' @param preset The preset for parameters, default "Cas9". Alternatives:
 #'  Cas12 and NULL (user custom settings)
 #' @param hash_length ""
 #' @param ambig_max ""
@@ -15,7 +18,7 @@
 #' @param fwd_pam ""
 #' @param extend3prime ""
 #' @param validate TRUE, if false, do not check that CHOPOFF path is valid
-#' @param chopoff_path PATH to CHOPOFF, default Sys.getenv("CHOPOFF")
+#' @param chopoff_path PATH to CHOPOFF, default install_CHOPOFF()
 #' @return invisible(NULL)
 #' @export
 #' @examples
@@ -30,13 +33,14 @@
 #' build_index(name, genome, out_dir_index, validate = FALSE)
 #'
 build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
-                        distance = 3, motif = "Cas9", hash_length = 16,
+                        distance = 3, preset = "Cas9", hash_length = 16,
                         ambig_max = 0, strands = c("+", "-"),
                         fwd_motif = "NNNNNNNNNNNNNNNNNNNNXXX",
                         fwd_pam = "XXXXXXXXXXXXXXXXXXXXNGG",
                         extend3prime = FALSE,
                         validate = TRUE,
-                        chopoff_path = Sys.getenv("CHOPOFF")) {
+                        chopoff_path = install_CHOPOFF()) {
+  motif <- preset
   stopifnot(length(motif) %in% c(0, 1) && (is.character(motif) || is.null(motif)))
   stopifnot(is.character(strands) && all(strands %in% c("+", "-")))
   stopifnot(is.logical(extend3prime))
@@ -64,7 +68,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 #' @param distance ""
 #' @param validate TRUE, if false, do not check that CHOPOFF path is valid
 #' @param algorithm default: prefixHashDB, alternatives: TODO: list all here!
-#' @param chopoff_path PATH to CHOPOFF, default "CHOPOFF"
+#' @param chopoff_path PATH to CHOPOFF, default install_chopoff()
 #' @return path to csv output file of guides
 #' @export
 #' @examples
@@ -91,7 +95,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 search_index <- function(guides, index_dir, out_file = file.path(index_dir, paste0(algorithm, "_", distance, ".csv")),
                          algorithm = "prefixHashDB",
                          distance = 3, validate = TRUE,
-                         chopoff_path = Sys.getenv("CHOPOFF")) {
+                         chopoff_path = install_CHOPOFF()) {
   stopifnot(dir.exists(index_dir))
   if (length(guides) != 1 && is.character(guides) && file.exists(guides)) {
     stop("'guides' must be character path to single existing file!")
@@ -131,4 +135,24 @@ preset_check <- function(motif, hash_length, ambig_max, strands, extend3prime) {
     }
   }
   return(invisible(NULL))
+}
+
+#' Install backend utilities for CHOPOFF
+#'
+#' Will install from source:\cr
+#' - Julia 1.8.5\cr
+#' - CHOPOFF.jl
+#' @param script the bash script to run to install the backend
+#' @return The path to installed CHOPOFF.jl binary, can also be retrieved with Sys.getenv("CHOPOFF").
+#' @export
+install_CHOPOFF <- function(script = system.file("bash_script", "install_julia_and_CHOPOFF.sh", package = "crisprCHOPOFF")) {
+  path <- Sys.getenv("CHOPOFF")
+  if (path == "") {
+    message("- Installing Julia 1.8.5 and CHOPOFF.jl")
+    message("This will only be done once, please wait 5 minutes")
+    message("If any errors occur, please see github readme or alter the script")
+    message("If you are running RStudio, you need to restart RStudio after install")
+    system(script, wait = TRUE)
+  }
+  return(path)
 }
