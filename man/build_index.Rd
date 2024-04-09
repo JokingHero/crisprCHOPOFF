@@ -33,7 +33,8 @@ index in directory, named \code{paste0(genome, ".fai")}}
 
 \item{distance}{""}
 
-\item{motif}{""}
+\item{motif}{The preset for parameters, default "Cas9". Alternatives:
+Cas12 and NULL (user custom settings)}
 
 \item{hash_length}{""}
 

@@ -6,7 +6,8 @@
 #' @param out_dir ""
 #' @param algorithm default: prefixHashDB, alternatives: TODO: list all here!
 #' @param distance ""
-#' @param motif ""
+#' @param motif The preset for parameters, default "Cas9". Alternatives:
+#'  Cas12 and NULL (user custom settings)
 #' @param hash_length ""
 #' @param ambig_max ""
 #' @param strands c("+", "-"), search both 5' (+) and 3' (-) strands
@@ -40,6 +41,12 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
   stopifnot(is.character(strands) && all(strands %in% c("+", "-")))
   stopifnot(is.logical(extend3prime))
   if (validate) check_exist_and_get_version(chopoff_path)
+  if (!is.null(motif)) {
+    if ((hash_length != 16) | (ambig_max != 0) | identical(strands, c("+", "-")) | (extend3prime != FALSE)) {
+      warning("User defined custom parameters have no effect if preset 'motif' is set to Cas9 or Cas12,
+           set motif = NULL if you want to use custom parameters!")
+    }
+  }
 
   args <- c("--name" = name, "--genome" = genome, "--output" = out_dir,
             "--distance" =  distance, "--motif" = motif,
