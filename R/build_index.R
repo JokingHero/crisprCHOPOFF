@@ -41,12 +41,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
   stopifnot(is.character(strands) && all(strands %in% c("+", "-")))
   stopifnot(is.logical(extend3prime))
   if (validate) check_exist_and_get_version(chopoff_path)
-  if (!is.null(motif)) {
-    if ((hash_length != 16) | (ambig_max != 0) | identical(strands, c("+", "-")) | (extend3prime != FALSE)) {
-      warning("User defined custom parameters have no effect if preset 'motif' is set to Cas9 or Cas12,
-           set motif = NULL if you want to use custom parameters!")
-    }
-  }
+  preset_check(motif, hash_length, ambig_max, strands, extend3prime)
 
   args <- c("--name" = name, "--genome" = genome, "--output" = out_dir,
             "--distance" =  distance, "--motif" = motif,
@@ -125,5 +120,15 @@ check_exist_and_get_version <- function(chopoff_path) {
     stop("Could not run existing CHOPOFF binary, try running ", path, "--version in the terminal.")
   }
   message("-- Running CHOPPOFF (version:", version,")")
+  return(invisible(NULL))
+}
+
+preset_check <- function(motif, hash_length, ambig_max, strands, extend3prime) {
+  if (!is.null(motif)) {
+    if ((hash_length != 16) | (ambig_max != 0) | !identical(strands, c("+", "-")) | (extend3prime != FALSE)) {
+      warning("User defined custom parameters have no effect if preset 'motif' is set to Cas9 or Cas12,
+           set motif = NULL if you want to use custom parameters!")
+    }
+  }
   return(invisible(NULL))
 }
