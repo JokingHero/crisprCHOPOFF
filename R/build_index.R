@@ -25,8 +25,8 @@
 #' #if (!file.exists(paste0(genome, ".fai"))) {
 #' #Rsamtools::indexFa(genome)
 #' #}
-#' out_dir <- file.path(tempdir(), "CHOPOFF_sample_genome")
-#' build_index(name, genome, out_dir, validate = FALSE)
+#' out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
+#' build_index(name, genome, out_dir_index, validate = FALSE)
 #'
 build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
                         distance = 3, motif = "Cas9", hash_length = 16,
@@ -82,7 +82,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 #' # use data.table::fread for reading in large list
 #' # Subset to 0 distance hits
 #' dist0 <- guide_hits_table[guide_hits_table$distance == 0,]
-#' dist0
+#' head(dist0)
 #' # Which chromosomes is a specific guide found on with 0 distance hits?
 #' unique(dist0[dist0$guide == "TCCGGCCTGGTTATCGAAGG",]$chromosome) # 2 chromosomes
 search_index <- function(guides, index_dir, out_file = file.path(index_dir, paste0(algorithm, "_", distance, ".csv")),

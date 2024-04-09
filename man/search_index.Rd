@@ -11,7 +11,7 @@ search_index(
   algorithm = "prefixHashDB",
   distance = 3,
   validate = TRUE,
-  chopoff_path = "CHOPOFF"
+  chopoff_path = Sys.getenv("CHOPOFF")
 )
 }
 \arguments{

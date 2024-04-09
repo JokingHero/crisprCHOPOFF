@@ -18,7 +18,7 @@ build_index(
   fwd_pam = "XXXXXXXXXXXXXXXXXXXXNGG",
   extend3prime = FALSE,
   validate = TRUE,
-  chopoff_path = "CHOPOFF"
+  chopoff_path = Sys.getenv("CHOPOFF")
 )
 }
 \arguments{
@@ -49,7 +49,7 @@ index in directory, named \code{paste0(genome, ".fai")}}
 
 \item{validate}{TRUE, if false, do not check that CHOPOFF path is valid}
 
-\item{chopoff_path}{PATH to CHOPOFF, default "CHOPOFF"}
+\item{chopoff_path}{PATH to CHOPOFF, default Sys.getenv("CHOPOFF")}
 }
 \value{
 invisible(NULL)
