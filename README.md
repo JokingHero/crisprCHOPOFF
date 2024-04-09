@@ -56,7 +56,7 @@ cd CHOPOFF.jl
 echo 'export PATH="$PATH:~/bin/CHOPOFF.jl/build/bin/"' >> ~/.bashrc
 # In Shell
 . ~/.bashrc # resource shell
-echo CHOPOFF=/home/roler/Desktop/forks/CHOPOFF.jl/build/bin/CHOPOFF >> ~/.Renviron
+echo CHOPOFF=~/bin/CHOPOFF.jl/build/bin/CHOPOFF >> ~/.Renviron
 # <- To allow RSTUDIO to see the CHOPOFF path, then restart RSTUDIO
 ```  
 
