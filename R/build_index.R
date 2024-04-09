@@ -9,7 +9,7 @@
 #' @param motif ""
 #' @param hash_length ""
 #' @param ambig_max ""
-#' @param strands c("+", "-"), search both 5' and 3' strands
+#' @param strands c("+", "-"), search both 5' (+) and 3' (-) strands
 #' @param fwd_motif ""
 #' @param fwd_pam ""
 #' @param extend3prime ""
@@ -36,7 +36,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
                         extend3prime = FALSE,
                         validate = TRUE,
                         chopoff_path = Sys.getenv("CHOPOFF")) {
-  stopifnot(is.character(strands))
+  stopifnot(is.character(strands) && all(strands %in% c("+", "-")))
   stopifnot(is.logical(extend3prime))
   if (validate) check_exist_and_get_version(chopoff_path)
 

@@ -51,7 +51,7 @@ guide_hits_table <- read.table(guide_hits, sep = ",", header = TRUE)
 # use data.table::fread for reading in large list
 # Subset to 0 distance hits
 dist0 <- guide_hits_table[guide_hits_table$distance == 0,]
-dist0
+head(dist0)
 # Which chromosomes is a specific guide found on with 0 distance hits?
 unique(dist0[dist0$guide == "TCCGGCCTGGTTATCGAAGG",]$chromosome) # 2 chromosomes
 }

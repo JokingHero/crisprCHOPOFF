@@ -39,7 +39,7 @@ index in directory, named \code{paste0(genome, ".fai")}}
 
 \item{ambig_max}{""}
 
-\item{strands}{c("+", "-"), search both 5' and 3' strands}
+\item{strands}{c("+", "-"), search both 5' (+) and 3' (-) strands}
 
 \item{fwd_motif}{""}
 
@@ -65,7 +65,7 @@ genome <- system.file("extdata/sample_genome", "semirandom.fa", package = "crisp
 #if (!file.exists(paste0(genome, ".fai"))) {
 #Rsamtools::indexFa(genome)
 #}
-out_dir <- file.path(tempdir(), "CHOPOFF_sample_genome")
-build_index(name, genome, out_dir, validate = FALSE)
+out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
+build_index(name, genome, out_dir_index, validate = FALSE)
 
 }
