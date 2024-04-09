@@ -27,7 +27,7 @@ mkdir -p ~/bin/julia
 cd ~/bin/julia
 wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.5-linux-x86_64.tar.gz
 tar -xvzf julia-1.8.5-linux-x86_64.tar.gz
-~/bin/julia/julia-1.8.5
+# Binary is now in: ~/bin/julia/julia-1.8.5/bin
 # In .bashrc
 export PATH="$PATH:~/bin/julia/julia-1.8.5/bin"
 export JULIA_NUM_THREADS=11
@@ -43,7 +43,7 @@ cd CHOPOFF.jl
 # In .bashrc (update to your custom path!)
 export PATH="$PATH:~/bin/CHOPOFF.jl/build/bin/"
 # In Shell
-. ~/.bashrc # resource shell, if not working restart computer now
+. ~/.bashrc # resource shell
 echo CHOPOFF=/home/roler/Desktop/forks/CHOPOFF.jl/build/bin/CHOPOFF >> ~/.Renviron
 # <- To allow RSTUDIO to see the CHOPOFF path, then restart RSTUDIO
 ```  
