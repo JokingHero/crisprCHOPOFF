@@ -27,15 +27,11 @@ mkdir -p ~/bin/julia
 cd ~/bin/julia
 wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.5-linux-x86_64.tar.gz
 tar -xvzf julia-1.8.5-linux-x86_64.tar.gz
-# Binary is now in: ~/bin/julia/julia-1.8.5/bin
-# In .bashrc
-export PATH="$PATH:~/bin/julia/julia-1.8.5/bin" >> ~/.bashrc
-export JULIA_NUM_THREADS=11 >> ~/.bashrc
-# In Shell
+# Update PATH and source .bashrc
+echo 'export PATH="$PATH:~/bin/julia/julia-1.8.5/bin"' >> ~/.bashrc
+echo 'export JULIA_NUM_THREADS=11' >> ~/.bashrc
 . ~/.bashrc # resource shell
-
 # Clone julia CHOPOFF library (select folder where you have your github clones)
-# In Shell
 cd ~/bin # update path to your path if needed
 git clone git@github.com:JokingHero/CHOPOFF.jl.git
 cd CHOPOFF.jl
