@@ -83,7 +83,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 search_index <- function(guides, index_dir, out_file = file.path(index_dir, paste0(algorithm, "_", distance, ".csv")),
                          algorithm = "prefixHashDB",
                          distance = 3, validate = TRUE,
-                         chopoff_path = "~/Desktop/forks/CHOPOFF.jl/build/bin/CHOPOFF") {
+                         chopoff_path = "CHOPOFF") {
   stopifnot(dir.exists(index_dir))
   if (length(guides) != 1 && is.character(guides) && file.exists(guides)) {
     stop("'guides' must be character path to single existing file!")

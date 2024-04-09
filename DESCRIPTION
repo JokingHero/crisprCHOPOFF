@@ -2,10 +2,10 @@ Package: crisprCHOPOFF
 Title: R wrapper for CHOPOFF, a CRISPR OFF target search algorithm
 Version: 0.0.0.9000
 Authors@R: c(
-    person("Kornel", "Labun", , "kornel.labun@gmail.com", role = c("aut", "cre"),
+    person("Kornel", "Labun", email = "kornel.labun@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID")),
-    person("Haakon", "Tjeldnes", "hauken_heyken@hotmail.com", role = c("ctb")),
-    person("Michal", "Swirski", "michal.swirski@uw.edu.pl", role = c("ctb")))
+    person("Haakon", "Tjeldnes", email = "hauken_heyken@hotmail.com", role = c("ctb")),
+    person("Michal", "Swirski", email = "michal.swirski@uw.edu.pl", role = c("ctb")))
 Description: Efficient search of CRISPR OFF targets
 License: MIT + file LICENSE
 Encoding: UTF-8

@@ -11,7 +11,7 @@ search_index(
   algorithm = "prefixHashDB",
   distance = 3,
   validate = TRUE,
-  chopoff_path = "~/Desktop/forks/CHOPOFF.jl/build/bin/CHOPOFF"
+  chopoff_path = "CHOPOFF"
 )
 }
 \arguments{
