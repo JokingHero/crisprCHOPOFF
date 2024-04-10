@@ -19,13 +19,16 @@ search_index(
 
 \item{algorithm}{default: prefixHashDB, alternatives: TODO: list all here!}
 
-\item{distance}{""}
+\item{distance}{Maximum edit distance to analyze. Must be less
+or equal to the distance that was used when
+building db. (default: 3)}
 
 \item{validate}{TRUE, if false, do not check that CHOPOFF path is valid}
 
 \item{chopoff_path}{PATH to CHOPOFF, default install_chopoff()}
 
-\item{out_dir}{""}
+\item{out_dir}{Path to the file where detailed results should
+be written.}
 }
 \value{
 path to csv output file of guides

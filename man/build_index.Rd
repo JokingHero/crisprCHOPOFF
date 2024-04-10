@@ -27,26 +27,30 @@ build_index(
 \item{genome}{Path to the genome, either .fa or .2bit. Must have a fasta
 index in directory, named \code{paste0(genome, ".fai")}}
 
-\item{out_dir}{""}
+\item{out_dir}{output directory where the database will be stored}
 
 \item{algorithm}{default: prefixHashDB, alternatives: TODO: list all here!}
 
-\item{distance}{""}
+\item{distance}{Within what distance can we search for off-targets? (default: 3)}
 
 \item{preset}{The preset for parameters, default "Cas9". Alternatives:
 Cas12 and NULL (user custom settings)}
 
 \item{hash_length}{""}
 
-\item{ambig_max}{""}
+\item{ambig_max}{How many ambiguous bases are allowed inside the guide? (default: 0)}
 
 \item{strands}{c("+", "-"), search both 5' (+) and 3' (-) strands}
 
-\item{fwd_motif}{""}
+\item{fwd_motif}{How many ambiguous bases are allowed inside the guide? (default: 0)}
 
-\item{fwd_pam}{""}
+\item{fwd_pam}{Motif in 5'-3' that will be matched on the reference (without the X). For example for Cas9 it is 20*N + NGG: XXXXXXXXXXXXXXXXXXXXNGG}
 
-\item{extend3prime}{""}
+\item{extend3prime}{Defines how off-targets will be aligned to the
+guides and where extra nucleotides will be
+added for alignment within distance. Whether
+to extend in the 5' and 3' direction. Default
+is Cas9 with extend3 = false.}
 
 \item{validate}{TRUE, if false, do not check that CHOPOFF path is valid}
 

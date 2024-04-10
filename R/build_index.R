@@ -6,17 +6,21 @@
 #' @param name How will you shortly name this database?
 #' @param genome Path to the genome, either .fa or .2bit. Must have a fasta
 #' index in directory, named \code{paste0(genome, ".fai")}
-#' @param out_dir ""
+#' @param out_dir output directory where the database will be stored
 #' @param algorithm default: prefixHashDB, alternatives: TODO: list all here!
-#' @param distance ""
+#' @param distance Within what distance can we search for off-targets? (default: 3)
 #' @param preset The preset for parameters, default "Cas9". Alternatives:
 #'  Cas12 and NULL (user custom settings)
 #' @param hash_length ""
-#' @param ambig_max ""
+#' @param ambig_max  How many ambiguous bases are allowed inside the guide? (default: 0)
 #' @param strands c("+", "-"), search both 5' (+) and 3' (-) strands
-#' @param fwd_motif ""
-#' @param fwd_pam ""
-#' @param extend3prime ""
+#' @param fwd_motif  How many ambiguous bases are allowed inside the guide? (default: 0)
+#' @param fwd_pam Motif in 5'-3' that will be matched on the reference (without the X). For example for Cas9 it is 20*N + NGG: XXXXXXXXXXXXXXXXXXXXNGG
+#' @param extend3prime  Defines how off-targets will be aligned to the
+#' guides and where extra nucleotides will be
+#' added for alignment within distance. Whether
+#' to extend in the 5' and 3' direction. Default
+#' is Cas9 with extend3 = false.
 #' @param validate TRUE, if false, do not check that CHOPOFF path is valid
 #' @param chopoff_path PATH to CHOPOFF, default install_CHOPOFF()
 #' @return invisible(NULL)
@@ -64,8 +68,11 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 #' Search guides in CHOPOFF index
 
 #' @param guides path to txt file of guides, 1 per line of correct length
-#' @param out_dir ""
-#' @param distance ""
+#' @param out_dir Path to the file where detailed results should
+#' be written.
+#' @param distance  Maximum edit distance to analyze. Must be less
+#' or equal to the distance that was used when
+#' building db. (default: 3)
 #' @param validate TRUE, if false, do not check that CHOPOFF path is valid
 #' @param algorithm default: prefixHashDB, alternatives: TODO: list all here!
 #' @param chopoff_path PATH to CHOPOFF, default install_chopoff()

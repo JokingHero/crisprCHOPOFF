@@ -74,6 +74,35 @@ library(crisprCHOPOFF)
 # Search the index with selected guides
 ?search_index
 ```  
+
+Quick walk-through:
+
+```r
+name <- "CAS9"
+genome <- system.file("extdata/sample_genome", "semirandom.fa", package = "crisprCHOPOFF")
+## Note: a fasta index ".fai" file must exist in directory of genome.
+# You can make it with:
+#if (!file.exists(paste0(genome, ".fai"))) {
+#Rsamtools::indexFa(genome)
+#}
+out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
+build_index(name, genome, out_dir_index, validate = FALSE, distance = 2)
+
+# Now search some guides
+guides <- system.file("extdata/sample_genome", "guides.txt", package = "crisprCHOPOFF")
+# Quick preview in guides:
+guide_candidates <- read.table(guides, col.names = "guides")
+unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
+guide_hits <- search_index(guides, out_dir_index, validate = FALSE, distance = 2)
+guide_hits_table <- read.table(guide_hits, sep = ",", header = TRUE)
+# use data.table::fread for reading in large list
+# Subset to 0 distance hits
+dist0 <- guide_hits_table[guide_hits_table$distance == 0,]
+head(dist0)
+# Which chromosomes is a specific guide found on with 0 distance hits?
+unique(dist0[dist0$guide == "TCCGGCCTGGTTATCGAAGG",]$chromosome) # 2 chromosomes
+```
+
 Please read Bioconductor vignettes for detailed tutorials and examples.
 
 #### Feedback
