@@ -3,6 +3,8 @@
 #'
 #' Build the genome index for CHOPOFF, using either a preset (Cas9 or Cas12),
 #' or user defined parameters.
+#'
+#' If Preset is set, some other arguments are ignored.
 #' @param name How will you shortly name this database?
 #' @param genome Path to the genome, either .fa or .2bit. Must have a fasta
 #' index in directory, named \code{paste0(genome, ".fai")}
@@ -11,11 +13,15 @@
 #' @param distance Within what distance can we search for off-targets? (default: 3)
 #' @param preset The preset for parameters, default "Cas9". Alternatives:
 #'  Cas12 and NULL (user custom settings)
-#' @param hash_length ""
+#' @param hash_length numeric, default 16.
 #' @param ambig_max  How many ambiguous bases are allowed inside the guide? (default: 0)
 #' @param strands c("+", "-"), search both 5' (+) and 3' (-) strands
-#' @param fwd_motif  How many ambiguous bases are allowed inside the guide? (default: 0)
-#' @param fwd_pam Motif in 5'-3' that will be matched on the reference (without the X). For example for Cas9 it is 20*N + NGG: XXXXXXXXXXXXXXXXXXXXNGG
+#' @param fwd_motif  Motif of pseudo-spacer in 5'-3' that will be matched
+#' on the reference (without the PAM: X).
+#' For example for Cas9 it is 20*N + XXX:
+#'  paste(c(rep("N", 20), rep("X", 3)), collapse = "")
+#' @param fwd_pam PAM in 5'-3' that will be matched on the reference (without the X).
+#' For example for Cas9 it is 20*X + NGG: paste(c(rep("X", 20), "NGG"), collapse = "")
 #' @param extend3prime  Defines how off-targets will be aligned to the
 #' guides and where extra nucleotides will be
 #' added for alignment within distance. Whether
@@ -66,12 +72,14 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 }
 
 #' Search guides in CHOPOFF index
-#' @param guides path to txt file of guides, 1 per line of correct length
 #' @param guides character vector of guides, crisprDesign::GuideSet, or
 #'  path to txt file of guides.
 #'  If file, the file must be a single column, 1 guide per line of correct length,
 #'  without a header or row names.
-#' @param out_dir Path to the file where detailed results should
+#' @param index_dir the directory of the index created during 'build_index'.
+#'  Will automatically find the file, as only 1 db can exist in a folder
+#'  at the same time per algorithm.
+#' @param out_file Path to the file where detailed results should
 #' be written.
 #' @param distance  Maximum edit distance to analyze. Must be less
 #' or equal to the distance that was used when

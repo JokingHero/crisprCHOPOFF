@@ -36,15 +36,19 @@ index in directory, named \code{paste0(genome, ".fai")}}
 \item{preset}{The preset for parameters, default "Cas9". Alternatives:
 Cas12 and NULL (user custom settings)}
 
-\item{hash_length}{""}
+\item{hash_length}{numeric, default 16.}
 
 \item{ambig_max}{How many ambiguous bases are allowed inside the guide? (default: 0)}
 
 \item{strands}{c("+", "-"), search both 5' (+) and 3' (-) strands}
 
-\item{fwd_motif}{How many ambiguous bases are allowed inside the guide? (default: 0)}
+\item{fwd_motif}{Motif of pseudo-spacer in 5'-3' that will be matched
+on the reference (without the PAM: X).
+For example for Cas9 it is 20*N + XXX:
+paste(c(rep("N", 20), rep("X", 3)), collapse = "")}
 
-\item{fwd_pam}{Motif in 5'-3' that will be matched on the reference (without the X). For example for Cas9 it is 20*N + NGG: XXXXXXXXXXXXXXXXXXXXNGG}
+\item{fwd_pam}{PAM in 5'-3' that will be matched on the reference (without the X).
+For example for Cas9 it is 20*X + NGG: paste(c(rep("X", 20), "NGG"), collapse = "")}
 
 \item{extend3prime}{Defines how off-targets will be aligned to the
 guides and where extra nucleotides will be
@@ -62,6 +66,9 @@ invisible(NULL)
 \description{
 Build the genome index for CHOPOFF, using either a preset (Cas9 or Cas12),
 or user defined parameters.
+}
+\details{
+If Preset is set, some other arguments are ignored.
 }
 \examples{
 name <- "CAS9"

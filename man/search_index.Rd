@@ -20,6 +20,13 @@ path to txt file of guides.
 If file, the file must be a single column, 1 guide per line of correct length,
 without a header or row names.}
 
+\item{index_dir}{the directory of the index created during 'build_index'.
+Will automatically find the file, as only 1 db can exist in a folder
+at the same time per algorithm.}
+
+\item{out_file}{Path to the file where detailed results should
+be written.}
+
 \item{algorithm}{default: prefixHashDB, alternatives: TODO: list all here!}
 
 \item{distance}{Maximum edit distance to analyze. Must be less
@@ -29,9 +36,6 @@ building db. (default: 3)}
 \item{validate}{TRUE, if false, do not check that CHOPOFF path is valid}
 
 \item{chopoff_path}{PATH to CHOPOFF, default install_chopoff()}
-
-\item{out_dir}{Path to the file where detailed results should
-be written.}
 }
 \value{
 path to csv output file of guides

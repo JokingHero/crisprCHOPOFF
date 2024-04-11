@@ -5,20 +5,20 @@
 \title{Filter overlaps}
 \usage{
 filter_overlaps(
-  distance = 3,
   detail_file,
   out_file = file.path(dirname(detail_file), paste0(sub(".csv", "",
     basename(detail_file)), "_filter_", distance, ".csv")),
+  distance = 3,
   validate = TRUE,
   chopoff_path = install_CHOPOFF()
 )
 }
 \arguments{
-\item{distance}{What is the distance for overlap filtering of off-targets. (default: 3)}
-
 \item{detail_file}{Path to the file where database is stored (output of search_index function, .csv file)}
 
 \item{out_file}{File path to the file where summarized output should be generated.}
+
+\item{distance}{What is the distance for overlap filtering of off-targets. (default: 3)}
 
 \item{validate}{TRUE, if false, do not check that CHOPOFF path is valid}
 
@@ -39,14 +39,14 @@ genome <- system.file("extdata/sample_genome", "semirandom.fa", package = "crisp
 #Rsamtools::indexFa(genome)
 #}
 out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
-build_index(name, genome, out_dir_index, validate = FALSE)
+build_index(name, genome, out_dir_index, distance = 2, validate = FALSE)
 
 # Now search some guides
 guides <- system.file("extdata/sample_genome", "guides.txt", package = "crisprCHOPOFF")
 # Quick preview in guides:
 guide_candidates <- read.table(guides, col.names = "guides")
 unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
-guide_hits <- search_index(guides, out_dir_index, validate = FALSE)
+guide_hits <- search_index(guides, out_dir_index, distance = 2, validate = FALSE)
 
-filter_overlaps(distance = 3, guide_hits)
+filter_overlaps(guide_hits, distance = 2)
 }

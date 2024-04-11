@@ -15,18 +15,19 @@
 #' #Rsamtools::indexFa(genome)
 #' #}
 #' out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
-#' build_index(name, genome, out_dir_index, validate = FALSE)
+#' build_index(name, genome, out_dir_index, distance = 2, validate = FALSE)
 #'
 #' # Now search some guides
 #' guides <- system.file("extdata/sample_genome", "guides.txt", package = "crisprCHOPOFF")
 #' # Quick preview in guides:
 #' guide_candidates <- read.table(guides, col.names = "guides")
 #' unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
-#' guide_hits <- search_index(guides, out_dir_index, validate = FALSE)
+#' guide_hits <- search_index(guides, out_dir_index, distance = 2, validate = FALSE)
 #'
-#'filter_overlaps(distance = 3, guide_hits)
-filter_overlaps <- function(distance = 3,detail_file,
+#'filter_overlaps(guide_hits, distance = 2)
+filter_overlaps <- function(detail_file,
                             out_file = file.path(dirname(detail_file), paste0(sub(".csv","",basename(detail_file)), "_filter_", distance, ".csv")),
+                            distance = 3,
                             validate = TRUE, chopoff_path = install_CHOPOFF()) {
   stopifnot(file.exists(detail_file))
 
@@ -39,6 +40,7 @@ filter_overlaps <- function(distance = 3,detail_file,
 }
 
 #' Summarize overlaps
+#' @param distance numeric integer, default 3. The levenstein distance (mismatches) allowed.
 #' @param detail_file Path to the file where database is stored (output of search_index function, .csv file)
 #' @param out_file File path where summarized output should be generated.
 #' @param validate TRUE, if false, do not check that CHOPOFF path is valid
@@ -54,19 +56,19 @@ filter_overlaps <- function(distance = 3,detail_file,
 #' #Rsamtools::indexFa(genome)
 #' #}
 #' out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
-#' build_index(name, genome, out_dir_index, validate = FALSE)
+#' build_index(name, genome, out_dir_index, distance = 2, validate = FALSE)
 #'
 #' # Now search some guides
 #' guides <- system.file("extdata/sample_genome", "guides.txt", package = "crisprCHOPOFF")
 #' # Quick preview in guides:
 #' guide_candidates <- read.table(guides, col.names = "guides")
 #' unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
-#' guide_hits <- search_index(guides, out_dir_index, validate = FALSE)
+#' guide_hits <- search_index(guides, out_dir_index, distance = 2, validate = FALSE)
 #'
-#'summarize_overlaps(guide_hits)
-summarize_overlaps <- function(distance = 3,detail_file,out_file = file.path(dirname(detail_file), paste0(sub(".csv","",basename(detail_file)), "_summarized", ".csv")),
-                            validate = TRUE,
-                            chopoff_path = install_CHOPOFF()) {
+#' summarize_overlaps(guide_hits, distance = 2)
+summarize_overlaps <- function(detail_file,
+                               out_file = file.path(dirname(detail_file), paste0(sub(".csv","",basename(detail_file)), "_summarized", ".csv")),
+                               distance = 3, validate = TRUE, chopoff_path = install_CHOPOFF()) {
   stopifnot(file.exists(detail_file))
 
   if (validate) check_exist_and_get_version(chopoff_path)

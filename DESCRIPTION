@@ -6,8 +6,17 @@ Authors@R: c(
            comment = c(ORCID = "YOUR-ORCID-ID")),
     person("Haakon", "Tjeldnes", email = "hauken_heyken@hotmail.com", role = c("ctb")),
     person("Michal", "Swirski", email = "michal.swirski@uw.edu.pl", role = c("ctb")))
-Description: Efficient search of CRISPR OFF targets
+Description: Efficient search of CRISPR OFF targets. Why use it? 
+  The fact it improves on bowtie implemention by allowing bulges and is faster
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
+VignetteBuilder: knitr
+Suggests:
+  crisprVerse,
+  BSgenome.Hsapiens.UCSC.hg38,
+  data.table,
+  testthat,
+  rmarkdown,
+  knitr
