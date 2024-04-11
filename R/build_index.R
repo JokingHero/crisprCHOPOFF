@@ -66,8 +66,11 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 }
 
 #' Search guides in CHOPOFF index
-
 #' @param guides path to txt file of guides, 1 per line of correct length
+#' @param guides character vector of guides, crisprDesign::GuideSet, or
+#'  path to txt file of guides.
+#'  If file, the file must be a single column, 1 guide per line of correct length,
+#'  without a header or row names.
 #' @param out_dir Path to the file where detailed results should
 #' be written.
 #' @param distance  Maximum edit distance to analyze. Must be less
@@ -87,14 +90,14 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 #' #Rsamtools::indexFa(genome)
 #' #}
 #' out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
-#' build_index(name, genome, out_dir_index, validate = FALSE)
+#' build_index(name, genome, out_dir_index, distance = 2, validate = FALSE)
 #'
 #' # Now search some guides
 #' guides <- system.file("extdata/sample_genome", "guides.txt", package = "crisprCHOPOFF")
 #' # Quick preview in guides:
 #' guide_candidates <- read.table(guides, col.names = "guides")
 #' unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
-#' guide_hits <- search_index(guides, out_dir_index, validate = FALSE)
+#' guide_hits <- search_index(guides, out_dir_index, distance = 2, validate = FALSE)
 #' guide_hits_table <- read.table(guide_hits, sep = ",", header = TRUE)
 #' # use data.table::fread for reading in large list
 #' # Subset to 0 distance hits
@@ -107,9 +110,7 @@ search_index <- function(guides, index_dir, out_file = file.path(index_dir, past
                          distance = 3, validate = TRUE,
                          chopoff_path = install_CHOPOFF()) {
   stopifnot(dir.exists(index_dir))
-  if (length(guides) != 1 && is.character(guides) && file.exists(guides)) {
-    stop("'guides' must be character path to single existing file!")
-  }
+  guides <- guide_input_check(guides)
   if (validate) check_exist_and_get_version(chopoff_path)
 
   args <- c("--guides" = guides, "--database" = index_dir, "--output" = out_file,
@@ -135,6 +136,27 @@ check_exist_and_get_version <- function(chopoff_path) {
   }
   message("-- Running CHOPPOFF (version:", version,")")
   return(invisible(NULL))
+}
+
+guide_input_check <- function(guides) {
+  stopifnot(length(guides) > 0)
+  if (is(guides, "GuideSet")) {
+    stopifnot("protospacer" %in% colnames(mcols(guides)))
+    guides <- as.character(guides$protospacer)
+  }
+  if (is.character(guides) && length(guides) >= 1) {
+    is_file_input <- length(guides) == 1 && grepl("\\.txt$", guides)
+    if (!is_file_input) {
+      temp_file <- paste0(tempfile(), "_guides.txt")
+      write.table(guides, temp_file, row.names = FALSE, col.names = FALSE,
+                  quote = FALSE)
+      guides <- temp_file
+    }
+    if (is_file_input && !file.exists(guides)) {
+      stop("File input give, but guides txt file does not exist, must be .txt extension!")
+    }
+  } else stop("length of guides input is 0!")
+  return(guides)
 }
 
 preset_check <- function(motif, hash_length, ambig_max, strands, extend3prime) {

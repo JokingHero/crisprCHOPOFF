@@ -1,5 +1,4 @@
-#' filter overlaps
-
+#' Filter overlaps
 #' @param distance  What is the distance for overlap filtering of off-targets. (default: 3)
 #' @param detail_file Path to the file where database is stored (output of search_index function, .csv file)
 #' @param out_file File path to the file where summarized output should be generated.
@@ -26,9 +25,9 @@
 #' guide_hits <- search_index(guides, out_dir_index, validate = FALSE)
 #'
 #'filter_overlaps(distance = 3, guide_hits)
-filter_overlaps <- function(distance = 3,detail_file,out_file = file.path(dirname(detail_file), paste0(sub(".csv","",basename(detail_file)), "_filter_", distance, ".csv")),
-                            validate = TRUE,
-                         chopoff_path = install_CHOPOFF()) {
+filter_overlaps <- function(distance = 3,detail_file,
+                            out_file = file.path(dirname(detail_file), paste0(sub(".csv","",basename(detail_file)), "_filter_", distance, ".csv")),
+                            validate = TRUE, chopoff_path = install_CHOPOFF()) {
   stopifnot(file.exists(detail_file))
 
   if (validate) check_exist_and_get_version(chopoff_path)
@@ -39,11 +38,9 @@ filter_overlaps <- function(distance = 3,detail_file,out_file = file.path(dirnam
   return(out_file)
 }
 
-#' summarize overlaps
-
-
+#' Summarize overlaps
 #' @param detail_file Path to the file where database is stored (output of search_index function, .csv file)
-#' @param out_file File path to the file where summarized output should be generated.
+#' @param out_file File path where summarized output should be generated.
 #' @param validate TRUE, if false, do not check that CHOPOFF path is valid
 #' @param chopoff_path PATH to CHOPOFF, default install_chopoff()
 #' @return path to csv output file of filtered guides

@@ -15,7 +15,10 @@ search_index(
 )
 }
 \arguments{
-\item{guides}{path to txt file of guides, 1 per line of correct length}
+\item{guides}{character vector of guides, crisprDesign::GuideSet, or
+path to txt file of guides.
+If file, the file must be a single column, 1 guide per line of correct length,
+without a header or row names.}
 
 \item{algorithm}{default: prefixHashDB, alternatives: TODO: list all here!}
 
@@ -45,14 +48,14 @@ genome <- system.file("extdata/sample_genome", "semirandom.fa", package = "crisp
 #Rsamtools::indexFa(genome)
 #}
 out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
-build_index(name, genome, out_dir_index, validate = FALSE)
+build_index(name, genome, out_dir_index, distance = 2, validate = FALSE)
 
 # Now search some guides
 guides <- system.file("extdata/sample_genome", "guides.txt", package = "crisprCHOPOFF")
 # Quick preview in guides:
 guide_candidates <- read.table(guides, col.names = "guides")
 unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
-guide_hits <- search_index(guides, out_dir_index, validate = FALSE)
+guide_hits <- search_index(guides, out_dir_index, distance = 2, validate = FALSE)
 guide_hits_table <- read.table(guide_hits, sep = ",", header = TRUE)
 # use data.table::fread for reading in large list
 # Subset to 0 distance hits

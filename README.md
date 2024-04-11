@@ -23,8 +23,9 @@ remotes::install_github("JokingHero/crisprCHOPOFF)
 OS support: Unix (linux & mac)
 For windows, run through WSL (windows subsystem for linux)
 
-Normally, first time running build_index(), will install the backend for you, 
+Normally, the first time running build_index(), the backend will be installed for you, 
 through the function install_CHOPOFF()
+
 ```r
 # The script ran, can be found from:
 system.file("bash_script", "install_julia_and_CHOPOFF.sh", package = "crisprCHOPOFF")
@@ -61,6 +62,13 @@ echo CHOPOFF=~/bin/CHOPOFF.jl/build/bin/CHOPOFF >> ~/.Renviron
 ```  
 
 CHOPOFF should now be ready to use in the R wrapper
+
+If you already have julia and CHOPOFF installed, you only need to make sure
+CHOPOFF is in .Renviron. 
+
+```sh
+echo CHOPOFF=~/bin/CHOPOFF.jl/build/bin/CHOPOFF >> ~/.Renviron
+```  
 
 #### More information
 
