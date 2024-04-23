@@ -15,7 +15,7 @@ vignette: >
 Welcome to crisprCHOPOFF, the R wrapper for CHOPOFF.
 
 ## Overview
-This vignette shows 4 examples:
+This vignette shows 5 examples:
 
 1. The Cas9 run returning GRangesList (most friendly)
 2. A complete Step by step Run of Cas9 guides
