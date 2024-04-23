@@ -17,16 +17,17 @@ Welcome to crisprCHOPOFF, the R wrapper for CHOPOFF.
 ## Overview
 This vignette shows 2 examples:
 
-1. Simple Run of Ca9 guides
-2. A short example in crisprVerse syntax, comparing bowtie to CHOPOFF 
+1. A complete Run of Cas9 guides
+2. A short Run of Cas12a guides
+3. A short example in crisprVerse syntax, comparing bowtie to CHOPOFF 
  for finding a justified candidate guide 
-3. A Full example in crisprVerse syntax, comparing bowtie to CHOPOFF 
+4. A Full example in crisprVerse syntax, comparing bowtie to CHOPOFF 
  for finding a justified candidate guide, with some analysis 
  
 ## Simple run
 
 Here we will 
-```{r simple}
+```{r simple_cas9}
 library(crisprCHOPOFF)
 
 name <- "CAS9"
@@ -52,6 +53,31 @@ dist0 <- guide_hits_table[guide_hits_table$distance == 0,]
 head(dist0)
 # Which chromosomes is a specific guide found on with 0 distance hits?
 unique(dist0[dist0$guide == "TCCGGCCTGGTTATCGAAGG",]$chromosome) # 2 chromosomes
+
+# Summarize overlaps
+summarize_path <- summarize_overlaps(guide_hits, distance = 2, validate = FALSE)
+summarize_table <- read.table(summarize_path, sep = ",", header = TRUE)
+sum(summarize_table$D2 > 0) # 10 guides have distance 2 alignments
+
+# Filter overlaps
+filter_path <- filter_overlaps(guide_hits, distance = 2, validate = FALSE)
+filter_table <- read.table(filter_path, sep = ",", header = TRUE)
+```
+
+## Short Cas12a example
+
+```{r simple_cas12a}
+name <- "CAS12a"
+out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome", name)
+build_index(name, genome, out_dir_index, distance = 2, preset = "Cas12a", validate = FALSE)
+#'
+# Now search some guides
+guides_cas12 <- system.file("extdata/sample_genome", "guides_cas12a.txt", package = "crisprCHOPOFF")
+# Quick preview in guides:
+guide_candidates <- read.table(guides, col.names = "guides")
+unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
+guide_hits <- search_index(guides, out_dir_index, distance = 2, validate = FALSE)
+guide_hits_table <- read.table(guide_hits, sep = ",", header = TRUE)
 ```
 
 ## Short crisprVerse example
@@ -59,7 +85,7 @@ unique(dist0[dist0$guide == "TCCGGCCTGGTTATCGAAGG",]$chromosome) # 2 chromosomes
 First we replicate the default bowtie run from crisprVerse vignette,
 then we show how to run CHOPOFF to get similar results.
 
-```{r crisprVerse}
+```{r crisprVerse_simple}
 # Load required libraries
 {
 library(crisprDesign)
@@ -126,6 +152,12 @@ guideSetCHOPOFF <- addOnTargetScores(guideSetCHOPOFF, methods="crisprater")
 guideSetBowTie
 guideSetCHOPOFF
 
+gsCHOPPOFF_n0 <- guideSetCHOPOFF[guideSetCHOPOFF$n1 == 0 & guideSetCHOPOFF$n2 == 0]
+CHOPOFF_gr <- unlist(gsCHOPPOFF_n0$alignments, use.names = FALSE)
+bowtie_gr <-unlist(guideSetBowTie$alignments, use.names = FALSE)
+identical(ranges(gsCHOPPOFF_n0), ranges(guideSetBowTie[names(gsCHOPPOFF_n0)]))
+# All 0 distances matches coordinates
+# The others do not, since they do not support bulges.
 ```
 ## Full crisprVerse example
 
@@ -134,7 +166,7 @@ then we show how to run CHOPOFF to get similar results.
 This example is better to run through, since it contains some additional
 analysis for understanding.
 
-```{r crisprVerse}
+```{r crisprVerse_full}
 # Load required libraries
 {
 library(crisprDesign)
@@ -150,11 +182,9 @@ library(crisprCHOPOFF)
   gr <- queryTxObject(txObject=grListExample,
                       featureType="cds",
                       queryColumn="gene_symbol",
-                      queryValue="IQSEC3")
-  gr <- gr[1] # exon 1
-  bsgenome <- BSgenome.Hsapiens.UCSC.hg38
-  guideSet <- findSpacers(gr,
-                          bsgenome=bsgenome,
+                      queryValue="IQSEC3")[1] # exon 1
+  guideSet <- findSpacers(gr, 
+                          bsgenome=BSgenome.Hsapiens.UCSC.hg38,
                           crisprNuclease=SpCas9)
   guideSet
   
@@ -166,8 +196,7 @@ library(crisprCHOPOFF)
   head(pamSites(guideSet))
   head(cutSites(guideSet))
   
-  guideSet <- addSequenceFeatures(guideSet)
-  guideSetTemplate <- guideSet # Branching point for CHOPOFF
+  guideSet <- addSequenceFeatures(guideSet) # Branching point for CHOPOFF
   head(guideSet)
 }
 
@@ -182,38 +211,37 @@ library(crisprCHOPOFF)
                         prefix="chr12")
   bowtie_index <- file.path(outdir, "chr12")
   
-  guideSet <- addSpacerAlignments(guideSet,
+  guideSetBowTie <- addSpacerAlignments(guideSet,
                                   txObject=grListExample,
                                   aligner_index=bowtie_index,
-                                  bsgenome=bsgenome,
+                                  bsgenome=BSgenome.Hsapiens.UCSC.hg38,
                                   n_mismatches=2)
-  guideSetBowTie <- guideSet # To compare with CHOPOFF output
-  guideSet
+  guideSetBowTie
   # Off target score
-  guideSet <- addOffTargetScores(guideSet)
-  guideSet
-  table(guideSet$score_cfd)
+  guideSetBowTie <- addOffTargetScores(guideSetBowTie)
+  guideSetBowTie
+  table(guideSetBowTie$score_cfd)
   
   # On target score
-  guideSet <- addOnTargetScores(guideSet, methods="crisprater")
-  head(guideSet)
-  table(guideSet$score_crisprater)
+  guideSetBowTie <- addOnTargetScores(guideSetBowTie, methods="crisprater")
+  head(guideSetBowTie)
+  table(guideSetBowTie$score_crisprater)
   
   # Final filter:
-  guideSetFilter <- guideSet[guideSet$percentGC>=20]
+  guideSetFilter <- guideSetBowTie[guideSetBowTie$percentGC>=20]
   guideSetFilter <- guideSetFilter[guideSetFilter$percentGC<=80]
   guideSetFilter <- guideSetFilter[!guideSetFilter$polyT]
   selected_bowtie <- guideSetFilter[guideSetFilter$score_crisprater > 0.8] 
   selected_bowtie # Our final candidate
 }
 # The offtarget detection using CHOPOFF
-
+{
 name <- "human_chr12_CHOPOFF_CAS9"
 out_dir_index <- file.path(tempdir(), name)
 if (!file.exists(paste0(fasta, ".fai"))) Rsamtools::indexFa(fasta)
 build_index(name, fasta, out_dir_index, distance = 2, validate = FALSE)
 
-guideSetCHOPOFF <- addSpacerAlignmentsCHOPOFF(guideSetTemplate, out_dir_index, distance = 2)
+guideSetCHOPOFF <- addSpacerAlignmentsCHOPOFF(guideSet, out_dir_index, distance = 2)
 
 # Off target score (This do not really make sense, because CHOPOFF supports bulges)
 # guideSetCHOPOFF <- addOffTargetScores(guideSetCHOPOFF)
@@ -231,6 +259,7 @@ guideSetCHOPOFFFilter <- guideSetCHOPOFFFilter[guideSetCHOPOFFFilter$percentGC<=
 guideSetCHOPOFFFilter <- guideSetCHOPOFFFilter[!guideSetCHOPOFFFilter$polyT]
 selected_CHOPOFF <-  guideSetCHOPOFFFilter[guideSetCHOPOFFFilter$score_crisprater > 0.8] 
 selected_CHOPOFF # Our final candidate
+}
 
 # Now lets compare
 identical(ranges(selected_CHOPOFF), ranges(selected_bowtie)) # We pick same site
@@ -243,13 +272,11 @@ identical(as.character(guideSetBowTie$protospacer), as.character(guideSetCHOPOFF
 
 identical(ranges(guideSetBowTie), ranges(guideSetCHOPOFF))
 identical(guideSetBowTie$n0, guideSetCHOPOFF$n0)
-# CHOPOFF supports searching for bulges, so results do not match.
+# CHOPOFF supports searching for bulges, so results do not match perfectly.
 
 table(mcols(guideSetBowTie)[,c("n0")])
 table(mcols(guideSetCHOPOFF)[,c("n0")])
 table(mcols(guideSetBowTie)[,c("n2")])
 table(mcols(guideSetCHOPOFF)[,c("n2")]) # <- 1 (1 distance hit), 2 (2 distance hits)
-
-
 ```
 

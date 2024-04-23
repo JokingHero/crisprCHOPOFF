@@ -3,6 +3,8 @@
 #' @title CHOPOFF version of crisprDesign::addSpacerAlignments
 #' @param guideSet a GuideSet object from the crisprDesign package
 #' @return the same guideSet object with added alignments to \code{mcols(guideSet)[["alignments"]]}
+#' @importFrom GenomicRanges GRanges
+#' @importFrom S4Vectors List
 #' @export
 addSpacerAlignmentsCHOPOFF <- function(guideSet, index_dir, out_file = file.path(index_dir, paste0(algorithm, "_", distance, ".csv")),
                                        algorithm = "prefixHashDB",
@@ -23,7 +25,7 @@ addSpacerAlignmentsCHOPOFF <- function(guideSet, index_dir, out_file = file.path
   colnames(alignments)[-1] <- gsub("D", "n", colnames(alignments)[-1])
 
   # Read in CHOPOFF hits from guide search
-  message("-- Inserting allignments to mcols")
+  message("- Inserting allignments to mcols")
   guide_hits_table <- read.table(guide_hits, sep = ",", header = TRUE)
 
   # Convert back to crisprVerse GuideSet object
@@ -47,13 +49,13 @@ addSpacerAlignmentsCHOPOFF <- function(guideSet, index_dir, out_file = file.path
   # We should have defined spacer as: guides_hits_table_ordered$alignment_guide
   # But crisprVerse does not support this, so we use guide.
 
-  positive_strand <- as.character(strand(alignments_grl))
+  positive_strand <- as.character(strand(alignments_grl)) == "+"
   mcols(alignments_grl) <- cbind(spacer = guides_hits_table_ordered$guide,
                                  mcols(guideSet[dups_total])[c("protospacer", "pam", "pam_site")],
                                  n_mismatches = guides_hits_table_ordered$distance,
                                  canonical = TRUE,
                                  cut_site = start(alignments_grl) + ifelse(positive_strand, -3, 3))
   alignments_grl <- split(alignments_grl, names(alignments_grl))[unique(names(alignments_grl))]
-  mcols(guideSet)[["alignments"]] <- alignments_grl
+  mcols(guideSet)[["alignments"]] <- List(alignments_grl)
   return(guideSet)
 }

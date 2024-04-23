@@ -12,7 +12,7 @@
 #' @param algorithm default: prefixHashDB, alternatives: TODO: list all here!
 #' @param distance Within what distance can we search for off-targets? (default: 3)
 #' @param preset The preset for parameters, default "Cas9". Alternatives:
-#'  Cas12 and NULL (user custom settings)
+#'  "Cas12a" and NULL (user custom settings)
 #' @param hash_length numeric, default 16.
 #' @param ambig_max  How many ambiguous bases are allowed inside the guide? (default: 0)
 #' @param strands c("+", "-"), search both 5' (+) and 3' (-) strands
