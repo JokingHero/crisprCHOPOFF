@@ -18,7 +18,7 @@ build_index(
   fwd_pam = "XXXXXXXXXXXXXXXXXXXXNGG",
   extend3prime = FALSE,
   validate = TRUE,
-  chopoff_path = install_CHOPOFF()
+  chopoff_path = CHOPOFF_renviron()
 )
 }
 \arguments{
@@ -79,6 +79,6 @@ genome <- system.file("extdata/sample_genome", "semirandom.fa", package = "crisp
 #Rsamtools::indexFa(genome)
 #}
 out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
-build_index(name, genome, out_dir_index, validate = FALSE)
+build_index(name, genome, out_dir_index, distance = 2)
 
 }

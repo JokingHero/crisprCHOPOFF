@@ -40,7 +40,7 @@
 #' #Rsamtools::indexFa(genome)
 #' #}
 #' out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
-#' build_index(name, genome, out_dir_index, validate = FALSE)
+#' build_index(name, genome, out_dir_index, distance = 2)
 #'
 build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
                         distance = 3, preset = "Cas9", hash_length = 16,
@@ -49,7 +49,13 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
                         fwd_pam = "XXXXXXXXXXXXXXXXXXXXNGG",
                         extend3prime = FALSE,
                         validate = TRUE,
-                        chopoff_path = install_CHOPOFF()) {
+                        chopoff_path = CHOPOFF_renviron()) {
+  stopifnot(is(genome, "character") && length(genome) == 1 && file.exists(genome))
+  if (!file.exists(paste0(genome, ".fai"))) {
+    stop("No fasta index file found, i.e. a .fai file suffix to genome path. Please run:
+         Rsamtools::indexFa(genome)")
+  }
+
   motif <- preset
   stopifnot(length(motif) %in% c(0, 1) && (is.character(motif) || is.null(motif)))
   stopifnot(is.character(strands) && all(strands %in% c("+", "-")))
@@ -116,7 +122,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
 search_index <- function(guides, index_dir, out_file = file.path(index_dir, paste0(algorithm, "_", distance, ".csv")),
                          algorithm = "prefixHashDB",
                          distance = 3, validate = TRUE,
-                         chopoff_path = install_CHOPOFF()) {
+                         chopoff_path = CHOPOFF_renviron()) {
   stopifnot(dir.exists(index_dir))
   guides <- guide_input_check(guides)
   if (validate) check_exist_and_get_version(chopoff_path)
@@ -126,73 +132,4 @@ search_index <- function(guides, index_dir, out_file = file.path(index_dir, past
   args <- c("search", paste(names(args), shQuote(args)), algorithm)
   system(paste(normalizePath(chopoff_path), paste(args, collapse = " ")), wait = TRUE)
   return(out_file)
-}
-
-check_exist_and_get_version <- function(chopoff_path) {
-  stopifnot(is.character(chopoff_path) && length(chopoff_path) == 1 && chopoff_path != "")
-
-  # Expand if path alias and check that it exists
-  path <- suppressWarnings(try(system(paste("which", chopoff_path), intern = TRUE), silent = TRUE))
-  if (length(path) == 0 && attr(path, "status") == 1) {
-    stop("CHOPOFF is not on path, use direct link to binary like: ./CHOPOFF.jl/build/bin/CHOPOFF")
-  }
-
-  version <- try(system(paste(chopoff_path, "--version"), intern = TRUE), silent = TRUE)
-
-  if (is(version, "try-error")) {
-    stop("Could not run existing CHOPOFF binary, try running ", path, "--version in the terminal.")
-  }
-  message("-- Running CHOPPOFF (version:", version,")")
-  return(invisible(NULL))
-}
-
-guide_input_check <- function(guides) {
-  stopifnot(length(guides) > 0)
-  if (is(guides, "GuideSet")) {
-    stopifnot("protospacer" %in% colnames(mcols(guides)))
-    guides <- as.character(guides$protospacer)
-  }
-  if (is.character(guides) && length(guides) >= 1) {
-    is_file_input <- length(guides) == 1 && grepl("\\.txt$", guides)
-    if (!is_file_input) {
-      temp_file <- paste0(tempfile(), "_guides.txt")
-      write.table(guides, temp_file, row.names = FALSE, col.names = FALSE,
-                  quote = FALSE)
-      guides <- temp_file
-    }
-    if (is_file_input && !file.exists(guides)) {
-      stop("File input give, but guides txt file does not exist, must be .txt extension!")
-    }
-  } else stop("length of guides input is 0!")
-  return(guides)
-}
-
-preset_check <- function(motif, hash_length, ambig_max, strands, extend3prime) {
-  if (!is.null(motif)) {
-    if ((hash_length != 16) | (ambig_max != 0) | !identical(strands, c("+", "-")) | (extend3prime != FALSE)) {
-      warning("User defined custom parameters have no effect if preset 'motif' is set to Cas9 or Cas12,
-           set motif = NULL if you want to use custom parameters!")
-    }
-  }
-  return(invisible(NULL))
-}
-
-#' Install backend utilities for CHOPOFF
-#'
-#' Will install from source:\cr
-#' - Julia 1.8.5\cr
-#' - CHOPOFF.jl
-#' @param script the bash script to run to install the backend
-#' @return The path to installed CHOPOFF.jl binary, can also be retrieved with Sys.getenv("CHOPOFF").
-#' @export
-install_CHOPOFF <- function(script = system.file("bash_script", "install_julia_and_CHOPOFF.sh", package = "crisprCHOPOFF")) {
-  path <- Sys.getenv("CHOPOFF")
-  if (path == "") {
-    message("- Installing Julia 1.8.5 and CHOPOFF.jl")
-    message("This will only be done once, please wait 5 minutes")
-    message("If any errors occur, please see github readme or alter the script")
-    message("If you are running RStudio, you need to restart RStudio after install")
-    system(script, wait = TRUE)
-  }
-  return(path)
 }
