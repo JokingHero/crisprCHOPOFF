@@ -28,7 +28,7 @@ This vignette shows 4 examples:
 
 ## Simple run CAS9
 
-Here we will run CAS9 preset on sample guides, showing it step by step.
+Here we will run CAS9 preset on sample guides, showing output as GRangesList
 ```{r simple_cas9}
 library(crisprCHOPOFF)
 
@@ -41,7 +41,7 @@ build_index(name, genome, out_dir_index, distance = 2)
 # Now search some guides
 guides <- system.file("extdata/sample_genome", "guides.txt", package = "crisprCHOPOFF")
 guideSet <- addSpacerAlignmentsCHOPOFF(guides, out_dir_index, distance = 2, crisprDesign_message = FALSE)
-guideSet$alignments[1:2] # Spacer 2 has 2 hits (chromosome 1 & 5)
+guideSet$alignments[1:2] # guide (protospacer) 2, has 2 alignments (spacers) (on chromosome 1 & 5)
 ```
  
 ## Step by step run CAS9
