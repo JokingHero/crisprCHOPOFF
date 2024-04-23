@@ -15,19 +15,39 @@ vignette: >
 Welcome to crisprCHOPOFF, the R wrapper for CHOPOFF.
 
 ## Overview
-This vignette shows 2 examples:
+This vignette shows 4 examples:
 
-1. A complete Run of Cas9 guides
-2. A short Run of Cas12a guides
-3. A short example in crisprVerse syntax, comparing bowtie to CHOPOFF 
- for finding a justified candidate guide 
-4. A Full example in crisprVerse syntax, comparing bowtie to CHOPOFF 
- for finding a justified candidate guide, with some analysis 
- 
-## Simple run
+1. The Cas9 run returning GRangesList (most friendly)
+2. A complete Step by step Run of Cas9 guides
+3. A short Run of Cas12a guides
+4. A short example in crisprVerse syntax, comparing bowtie to CHOPOFF 
+ for finding a justified candidate guide in a selected gene.
+5. A Full example in crisprVerse syntax, comparing bowtie to CHOPOFF 
+ for finding a justified candidate guidein a selected gene, 
+ with some additional analysis.
 
-Here we will 
+## Simple run CAS9
+
+Here we will run CAS9 preset on sample guides, showing it step by step.
 ```{r simple_cas9}
+library(crisprCHOPOFF)
+
+name <- "CAS9"
+genome <- system.file("extdata/sample_genome", "semirandom.fa", package = "crisprCHOPOFF")
+
+out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
+build_index(name, genome, out_dir_index, distance = 2)
+#'
+# Now search some guides
+guides <- system.file("extdata/sample_genome", "guides.txt", package = "crisprCHOPOFF")
+guideSet <- addSpacerAlignmentsCHOPOFF(guides, out_dir_index, distance = 2, crisprDesign_message = FALSE)
+guideSet$alignments[1:2] # Spacer 2 has 2 hits (chromosome 1 & 5)
+```
+ 
+## Step by step run CAS9
+
+Here we will run CAS9 preset on sample guides, showing it step by step.
+```{r full_cas9}
 library(crisprCHOPOFF)
 
 name <- "CAS9"
@@ -74,10 +94,11 @@ build_index(name, genome, out_dir_index, distance = 2, preset = "Cas12a", valida
 # Now search some guides
 guides_cas12 <- system.file("extdata/sample_genome", "guides_cas12a.txt", package = "crisprCHOPOFF")
 # Quick preview in guides:
-guide_candidates <- read.table(guides, col.names = "guides")
+guide_candidates <- read.table(guides_cas12, col.names = "guides")
 unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
-guide_hits <- search_index(guides, out_dir_index, distance = 2, validate = FALSE)
+guide_hits <- search_index(guides_cas12, out_dir_index, distance = 2, validate = FALSE)
 guide_hits_table <- read.table(guide_hits, sep = ",", header = TRUE)
+guide_hits_table
 ```
 
 ## Short crisprVerse example
@@ -142,7 +163,7 @@ no_fasta_index <- !file.exists(paste0(fasta, ".fai"))
 if (no_fasta_index) Rsamtools::indexFa(fasta)
 
 build_index(name, fasta, out_dir_index, distance = 2, validate = FALSE)
-guideSetCHOPOFF <- addSpacerAlignmentsCHOPOFF(guideSetTemplate, out_dir_index, 
+guideSetCHOPOFF <- addSpacerAlignmentsCHOPOFF(guideSet, out_dir_index, 
                                               distance = 2, validate = FALSE)
 # On target score (This is valid)
 guideSetCHOPOFF <- addOnTargetScores(guideSetCHOPOFF, methods="crisprater")

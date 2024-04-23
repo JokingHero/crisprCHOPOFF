@@ -17,8 +17,8 @@ test_that("Build CAS9 index distances (1:2)", {
 
 test_that("Build CAS12 index distances (1:2)", {
   name <- "CAS12a"
-  build_index(name, genome, out_dir_index_cas12, validate = FALSE, distance = 1, preset = "Cas12")
-  build_index(name, genome, out_dir_index_cas12, validate = FALSE, distance = 2, preset = "Cas12")
+  build_index(name, genome, out_dir_index_cas12, validate = FALSE, distance = 1, preset = "Cas12a")
+  build_index(name, genome, out_dir_index_cas12, validate = FALSE, distance = 2, preset = "Cas12a")
   expect_in("prefixHashDB.bin", list.files(out_dir_index_cas12))
 })
 

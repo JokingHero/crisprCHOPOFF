@@ -34,7 +34,7 @@ index in directory, named \code{paste0(genome, ".fai")}}
 \item{distance}{Within what distance can we search for off-targets? (default: 3)}
 
 \item{preset}{The preset for parameters, default "Cas9". Alternatives:
-Cas12 and NULL (user custom settings)}
+"Cas12a" and NULL (user custom settings)}
 
 \item{hash_length}{numeric, default 16.}
 

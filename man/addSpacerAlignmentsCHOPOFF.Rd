@@ -5,17 +5,21 @@
 \title{CHOPOFF version of crisprDesign::addSpacerAlignments}
 \usage{
 addSpacerAlignmentsCHOPOFF(
-  guideSet,
+  guides,
   index_dir,
   out_file = file.path(index_dir, paste0(algorithm, "_", distance, ".csv")),
   algorithm = "prefixHashDB",
   distance = 3,
   validate = TRUE,
-  chopoff_path = CHOPOFF_renviron()
+  chopoff_path = CHOPOFF_renviron(),
+  crisprDesign_message = TRUE
 )
 }
 \arguments{
-\item{guideSet}{a GuideSet object from the crisprDesign package}
+\item{guides}{character vector of guides, crisprDesign::GuideSet, or
+path to txt file of guides.
+If file, the file must be a single column, 1 guide per line of correct length,
+without a header or row names.}
 
 \item{index_dir}{the directory of the index created during 'build_index'.
 Will automatically find the file, as only 1 db can exist in a folder
@@ -33,9 +37,12 @@ building db. (default: 3)}
 \item{validate}{TRUE, if false, do not check that CHOPOFF path is valid}
 
 \item{chopoff_path}{PATH to CHOPOFF, default install_chopoff()}
+
+\item{crisprDesign_message}{logical, default TRUE. Print the message if not input is of class GuideSet.}
 }
 \value{
-the same guideSet object with added alignments to \code{mcols(guideSet)[["alignments"]]}
+the same GuideSet object with added alignments to \code{mcols(guideSet)[["alignments"]]}.
+If input was not of class GuideSet, it returns a GRangesList.
 }
 \description{
 CHOPOFF version of crisprDesign::addSpacerAlignments
