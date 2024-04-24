@@ -4,10 +4,12 @@
 #' @param crisprDesign_message logical, default TRUE. Print the message if not input is of class GuideSet.
 #' @return the same GuideSet object with added alignments to \code{mcols(guideSet)[["alignments"]]}.
 #'  If input was not of class GuideSet, it returns a GRangesList.
-#' @importFrom GenomicRanges GRanges strand
+#' @importFrom GenomicRanges GRanges strand start
 #' @importFrom IRanges IRanges
 #' @importFrom S4Vectors List DataFrame mcols mcols<-
 #' @importFrom Biostrings DNAStringSet reverseComplement subseq width
+#' @importFrom methods is
+#' @importFrom utils read.table write.table
 #' @export
 addSpacerAlignmentsCHOPOFF <- function(guides, index_dir, out_file = file.path(index_dir, paste0(algorithm, "_", distance, ".csv")),
                                        algorithm = "prefixHashDB",

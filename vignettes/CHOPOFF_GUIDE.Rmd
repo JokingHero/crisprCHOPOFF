@@ -2,7 +2,7 @@
 title: "CHOPOFF GUIDE"
 author: "Kornel Labun & Haakon Tjeldnes"
 date: "`r BiocStyle::doc_date()`"
-package: "`r pkg_ver('ORFik')`"
+package: "`r pkg_ver('crisprCHOPOFF')`"
 output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{CHOPOFF GUIDE}
