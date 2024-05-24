@@ -18,6 +18,7 @@ build_index(
   fwd_pam = "XXXXXXXXXXXXXXXXXXXXNGG",
   extend3prime = FALSE,
   validate = TRUE,
+  silent = FALSE,
   chopoff_path = CHOPOFF_renviron()
 )
 }
@@ -56,7 +57,9 @@ added for alignment within distance. Whether
 to extend in the 5' and 3' direction. Default
 is Cas9 with extend3 = false.}
 
-\item{validate}{TRUE, if false, do not check that CHOPOFF path is valid}
+\item{validate}{logical, default TRUE, if false, do not check that CHOPOFF path is valid}
+
+\item{silent}{logical, default TRUE. Do not print progress from julia code.}
 
 \item{chopoff_path}{PATH to CHOPOFF, default install_CHOPOFF()}
 }

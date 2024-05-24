@@ -7,26 +7,21 @@ guides_cas12 <- system.file("extdata/sample_genome", "guides_cas12a.txt", packag
 out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
 out_dir_index_cas12 <- paste0(out_dir_index, "cas12")
 
-test_that("Build CAS9 index distances (1:2)", {
+test_that("Build CAS9 index distances (2)", {
   name <- "CAS9"
-  build_index(name, genome, out_dir_index, validate = FALSE, distance = 1)
-  build_index(name, genome, out_dir_index, validate = FALSE, distance = 2)
+  build_index(name, genome, out_dir_index, validate = FALSE, distance = 2, silent = TRUE)
   expect_in("prefixHashDB.bin", list.files(out_dir_index))
 
 })
 
-test_that("Build CAS12 index distances (1:2)", {
+test_that("Build CAS12 index distances (2)", {
   name <- "CAS12a"
-  build_index(name, genome, out_dir_index_cas12, validate = FALSE, distance = 1, preset = "Cas12a")
-  build_index(name, genome, out_dir_index_cas12, validate = FALSE, distance = 2, preset = "Cas12a")
+  build_index(name, genome, out_dir_index_cas12, validate = FALSE, distance = 2, preset = "Cas12a", silent = TRUE)
   expect_in("prefixHashDB.bin", list.files(out_dir_index_cas12))
 })
 
 test_that("Search index, all input types", {
-  name <- "CAS9"
-  build_index(name, genome, out_dir_index, validate = FALSE, distance = 1)
   first_guide_start_pos <- 3933045
-
   # File path
   guide_hits <- search_index(guides, out_dir_index, validate = FALSE, distance = 1)
   guide_hits_table <- read.table(guide_hits, sep = ",", header = TRUE)
@@ -70,9 +65,9 @@ test_that("Search index, all input types", {
 
 
 
-test_that("test CAS9, distance 3:", {
+test_that("test CAS9 index search, distance 3:", {
   name <- "CAS9"
-  build_index(name, genome, out_dir_index, validate = FALSE, distance = 3)
+  build_index(name, genome, out_dir_index, validate = FALSE, distance = 3, silent = TRUE)
 
   # Quick preview in guides:
   guide_candidates <- read.table(guides, col.names = "guides")
@@ -84,10 +79,7 @@ test_that("test CAS9, distance 3:", {
 
 
 
-test_that("test CAS12a, distance 2:", {
-  name <- "CAS12a"
-  build_index(name, genome, out_dir_index_cas12, validate = FALSE, distance = 2, preset = "Cas12a")
-
+test_that("test CAS12a index search, distance 2:", {
   # Quick preview in guides:
   guide_candidates <- read.table(guides_cas12, col.names = "guides")
   unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
@@ -98,3 +90,20 @@ test_that("test CAS12a, distance 2:", {
     expect_equal(sum(guide_hits_table$start), 83314)
   }
 })
+
+test_that("test summarize_overlaps, distance 2:", {
+  summarize_path <- summarize_overlaps(guide_hits, distance = 2, validate = FALSE)
+  summarize_table <- read.table(summarize_path, sep = ",", header = TRUE)
+  expect_equal(nrow(summarize_table), 3)
+  expect_equal(sum(summarize_table$D0), 6)
+})
+
+test_that("test filter_overlaps, distance 2:", {
+  filter_path <- filter_overlaps(guide_hits, distance = 2, validate = FALSE)
+  filter_table <- read.table(filter_path, sep = ",", header = TRUE)
+  expect_equal(nrow(filter_table), 6)
+  expect_equal(sum(summarize_table$distance), 0)
+})
+
+
+

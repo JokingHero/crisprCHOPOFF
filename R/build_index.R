@@ -27,7 +27,8 @@
 #' added for alignment within distance. Whether
 #' to extend in the 5' and 3' direction. Default
 #' is Cas9 with extend3 = false.
-#' @param validate TRUE, if false, do not check that CHOPOFF path is valid
+#' @param validate logical, default TRUE, if false, do not check that CHOPOFF path is valid
+#' @param silent logical, default TRUE. Do not print progress from julia code.
 #' @param chopoff_path PATH to CHOPOFF, default install_CHOPOFF()
 #' @return invisible(NULL)
 #' @export
@@ -48,7 +49,7 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
                         fwd_motif = "NNNNNNNNNNNNNNNNNNNNXXX",
                         fwd_pam = "XXXXXXXXXXXXXXXXXXXXNGG",
                         extend3prime = FALSE,
-                        validate = TRUE,
+                        validate = TRUE, silent = FALSE,
                         chopoff_path = CHOPOFF_renviron()) {
   stopifnot(is(genome, "character") && length(genome) == 1 && file.exists(genome))
   if (!file.exists(paste0(genome, ".fai"))) {
@@ -73,7 +74,11 @@ build_index <- function(name, genome, out_dir, algorithm = "prefixHashDB",
   algorithm <- c(algorithm, "--hash_length" = hash_length)
   algorithm <- paste(names(algorithm), algorithm)
   args <- c("build", paste(names(args), shQuote(args)), logicals, algorithm)
-  system(paste(normalizePath(chopoff_path), paste(args, collapse = " ")), wait = TRUE)
+  full_call <- paste(normalizePath(chopoff_path), paste(args, collapse = " "))
+  res <- system(full_call, wait = TRUE, ignore.stderr = silent)
+  error_message <- paste0("An error occured during building of index",
+                         ifelse(silent, ", run with silent = FALSE, to see what it was.", ""))
+  if (res == 1) stop(error_message)
   return(invisible(NULL))
 }
 
