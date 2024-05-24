@@ -83,7 +83,7 @@ test_that("test CAS12a index search, distance 2:", {
   # Quick preview in guides:
   guide_candidates <- read.table(guides_cas12, col.names = "guides")
   unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
-  guide_hits <- search_index(guides_cas12, out_dir_index_cas12, validate = FALSE, distance = 1)
+  guide_hits <<- search_index(guides_cas12, out_dir_index_cas12, validate = FALSE, distance = 1)
 
   if (file.exists(guide_hits)) {
     guide_hits_table <- read.table(guide_hits, sep = ",", header = TRUE)
@@ -102,7 +102,7 @@ test_that("test filter_overlaps, distance 2:", {
   filter_path <- filter_overlaps(guide_hits, distance = 2, validate = FALSE)
   filter_table <- read.table(filter_path, sep = ",", header = TRUE)
   expect_equal(nrow(filter_table), 6)
-  expect_equal(sum(summarize_table$distance), 0)
+  expect_equal(sum(filter_table$distance), 0)
 })
 
 
