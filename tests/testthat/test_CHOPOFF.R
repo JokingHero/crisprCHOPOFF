@@ -7,9 +7,9 @@ guides_cas12 <- system.file("extdata/sample_genome", "guides_cas12a.txt", packag
 out_dir_index <- file.path(tempdir(), "CHOPOFF_sample_genome")
 out_dir_index_cas12 <- paste0(out_dir_index, "cas12")
 
-test_that("Build CAS9 index distances (2)", {
+test_that("Build CAS9 index distances (3)", {
   name <- "CAS9"
-  build_index(name, genome, out_dir_index, validate = FALSE, distance = 2, silent = TRUE)
+  build_index(name, genome, out_dir_index, validate = FALSE, distance = 3, silent = TRUE)
   expect_in("prefixHashDB.bin", list.files(out_dir_index))
 
 })
@@ -66,9 +66,6 @@ test_that("Search index, all input types", {
 
 
 test_that("test CAS9 index search, distance 3:", {
-  name <- "CAS9"
-  build_index(name, genome, out_dir_index, validate = FALSE, distance = 3, silent = TRUE)
-
   # Quick preview in guides:
   guide_candidates <- read.table(guides, col.names = "guides")
   unique(nchar(unlist(guide_candidates))) # Unique lengths of guides
